@@ -1,29 +1,19 @@
 #include <iostream>
-#include <iomanip>
 using namespace std;
 
 struct Linea {
     int numLlamadas;
     int totalMinutos;
-    double totalCosto;
-};
+    int totalCosto;
+} lineas[3];//Declarar un arreglo permite almacenar y manipular datos de las tres líneas telefónicas 
 
 int main() {
-    const int TARIFA_LOCAL = 35;
-    const int TARIFA_LARGA_DISTANCIA = 380;
-    const int TARIFA_CELULAR = 999;
-
-    Linea lineas[3];
-
-    for (int i = 0; i < 3; i++) {
-        lineas[i].numLlamadas = 0;
-        lineas[i].totalMinutos = 0;
-        lineas[i].totalCosto = 0;
-    }
-
+    int TARIFA_LOCAL = 35;
+    int TARIFA_LARGA_DISTANCIA = 380;
+    int TARIFA_CELULAR = 999;
     int opcion;
 
-    do {
+    while (true) {
         cout << "\n---------- Menu Principal ----------\n";
         cout << "1. Agregar una llamada\n";
         cout << "2. Visualizar la información de cada línea\n";
@@ -35,103 +25,62 @@ int main() {
 
         switch(opcion) {
             case 1: {
-            
-                int numeroLinea;
+                int numeroLinea, tipoLlamada, minutos;
                 cout << "\nIngrese el número de línea (1-3): ";
                 cin >> numeroLinea;
                 if (numeroLinea < 1 || numeroLinea > 3) {
                     cout << "Número de línea inválido.\n";
                     break;
                 }
-                
-                int tipoLlamada;
-                cout << "\nSeleccione el tipo de llamada:\n";
-                cout << "1. Llamada Local ($" << TARIFA_LOCAL << " por minuto)\n";
-                cout << "2. Llamada Larga Distancia ($" << TARIFA_LARGA_DISTANCIA << " por minuto)\n";
-                cout << "3. Llamada a Celular ($" << TARIFA_CELULAR << " por minuto)\n";
-                cout << "Tipo de llamada: ";
+                cout << "\nSeleccione el tipo de llamada:\n1. Local ($" << TARIFA_LOCAL << ")\n2. Larga Distancia ($" << TARIFA_LARGA_DISTANCIA << ")\n3. Celular ($" << TARIFA_CELULAR << ")\nTipo: ";
                 cin >> tipoLlamada;
-                
-                int minutos;
-                cout << "Ingrese la duración de la llamada (en minutos): ";
+                cout << "Ingrese la duración de la llamada (minutos): ";
                 cin >> minutos;
-                
-                double costo = 0;
                 switch (tipoLlamada) {
-                    case 1:
-                        costo = minutos * TARIFA_LOCAL;
-                        break;
-                    case 2:
-                        costo = minutos * TARIFA_LARGA_DISTANCIA;
-                        break;
-                    case 3:
-                        costo = minutos * TARIFA_CELULAR;
-                        break;
-                    default:
-                        cout << "Tipo de llamada inválido.\n";
-                    
+                    case 1: lineas[numeroLinea - 1].totalCosto += minutos * TARIFA_LOCAL; break;
+                    case 2: lineas[numeroLinea - 1].totalCosto += minutos * TARIFA_LARGA_DISTANCIA; break;
+                    case 3: lineas[numeroLinea - 1].totalCosto += minutos * TARIFA_CELULAR; break;
+                    default: cout << "Tipo de llamada inválido.\n"; break;
                 }
-                
-                // Actualizamos la información de la línea seleccionada (adjustamos el índice)
                 lineas[numeroLinea - 1].numLlamadas++;
                 lineas[numeroLinea - 1].totalMinutos += minutos;
-                lineas[numeroLinea - 1].totalCosto += costo;
-                
-                cout << "Llamada agregada exitosamente.\n";
             }
             break;
-            
-            case 2: {
-                // Mostrar información de cada línea
-                cout << "\n--- Información de cada línea ---\n";
+
+            case 2:
                 for (int i = 0; i < 3; i++) {
-                    cout << "\nLínea " << i + 1 << ":\n";
-                    cout << "  Número total de llamadas: " << lineas[i].numLlamadas << "\n";
-                    cout << "  Duración total de llamadas (minutos): " << lineas[i].totalMinutos << "\n";
-                    cout << "  Costo total de llamadas (pesos): " << fixed << setprecision(2) << lineas[i].totalCosto << "\n";
+                    cout << "\nLínea " << i + 1 << ": "
+                         << "Llamadas: " << lineas[i].numLlamadas
+                         << ", Minutos: " << lineas[i].totalMinutos
+                         << ", Costo: " << lineas[i].totalCosto << " pesos\n";
                 }
-            }
             break;
-            
+
             case 3: {
-                // Mostrar información consolidada sobre todas las líneas
-                int totalLlamadas = 0;
-                int totalMinutos = 0;
-                double totalCosto = 0;
-                
+                int totalLlamadas = 0, totalMinutos = 0, totalCosto = 0;
                 for (int i = 0; i < 3; i++) {
                     totalLlamadas += lineas[i].numLlamadas;
                     totalMinutos += lineas[i].totalMinutos;
                     totalCosto += lineas[i].totalCosto;
                 }
-                
-                double costoPromedio = (totalMinutos != 0) ? totalCosto / totalMinutos : 0;
-                
-                cout << "\n--- Información Consolidada ---\n";
-                cout << "Costo total (pesos): " << fixed << setprecision(2) << totalCosto << "\n";
-                cout << "Número total de llamadas: " << totalLlamadas << "\n";
-                cout << "Duración total de llamadas (minutos): " << totalMinutos << "\n";
-                cout << "Costo promedio por minuto: " << fixed << setprecision(2) << costoPromedio << "\n";
+                cout << "\nCosto total: " << totalCosto << " pesos\n"
+                     << "Total de llamadas: " << totalLlamadas << "\n"
+                     << "Total de minutos: " << totalMinutos << "\n"
+                     << "Costo promedio por minuto: " << (totalMinutos ? totalCosto / totalMinutos : 0) << " pesos\n";//Es un operador ternario (condición ? valor_si_verdadero : valor_si_falso). Forma màs corta del if y else
             }
             break;
-            
-            case 4:
-                for (int i = 0; i < 3; i++) {
-                    lineas[i].numLlamadas = 0;
-                    lineas[i].totalMinutos = 0;
-                    lineas[i].totalCosto = 0;
-                }
-                cout << "\nLa información ha sido reiniciada.\n";
-                break;
-            
-            case 5:
-                cout << "\nSaliendo del programa...\n";
-                break;
-            
-            default:
-                cout << "\nOpción inválida. Por favor seleccione una opción del menú.\n";
-        }
-    } while (opcion != 5);
 
-    return 0;
+            case 4:
+                for (int i = 0; i < 3; i++) lineas[i] = {0, 0, 0};
+                cout << "\nInformación reiniciada.\n";
+            break;
+
+            case 5:
+                cout << "\nSaliendo...\n";
+                return 0;
+
+            default:
+                cout << "\nOpción inválida.\n";
+        }
+    }
 }
