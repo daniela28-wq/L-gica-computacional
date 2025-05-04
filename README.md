@@ -4,3 +4,4 @@
 - **Rama `entrega3 - 29/03/2025`**: Contiene el material de la tercera entrega.
 - **Rama `entrega4 - 12/04/2025`**: Contiene el material de la cuarta entrega.
 - **Rama `entrega5 - 26/04/2025`**: Contiene el material de la quinta entrega.
+- **Rama `entrega6 - 03/05/2025`**: Contiene el material de la sexta entrega.
