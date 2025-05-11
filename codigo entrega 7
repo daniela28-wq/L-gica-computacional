@@ -1,0 +1,182 @@
+#include <iostream>
+using namespace std;
+
+// Estructura para almacenar la informacion de cada cliente y sus llamadas
+struct cliente 
+{
+    string nombre;
+    int cantidad_llamadas;       // Límite de llamadas por cliente (100 como ejemplo)
+    int id_llamada[100];         // Agreagamos el id que es muy importante para poder distinguir entre las diferentes llamadas
+    string categoria[100];       
+    float duracion[100];         
+    float valor[100];            
+};
+
+main() 
+{
+    int tam, i, x;
+    int opcion;
+    
+    cout <<"¿Cuntos clientes agregaremos el dia de hoy?\n";
+    cin >>tam;
+
+    cliente listaClientes[tam];  // Cantidad de clientes dinàmico depende de tam
+    
+    // Capturar los datos de cada cliente
+    
+    for(i = 0; i < tam; i++) 
+    {
+        cout <<"¿Cual es el nombre de tu cliente?\n";
+        cin >>listaClientes[i].nombre;
+
+        cout <<"¿Cuantas llamadas realizo el cliente " << listaClientes[i].nombre << "?\n";
+        cin >>listaClientes[i].cantidad_llamadas;
+    
+    // Verificar que no exceda el límite máximo de llamadas (en este caso 100)
+
+        if(listaClientes[i].cantidad_llamadas > 100) 
+        {
+            cout <<"El numero maximo de llamadas es 100. Se establecera este limite.\n";
+            listaClientes[i].cantidad_llamadas = 100;
+        }
+
+        // Capturar los datos de las llamadas del cliente
+        
+        for(x = 0; x < listaClientes[i].cantidad_llamadas; x++) 
+        {
+            cout <<"Ingrese el ID de la llamada " << (x+1) << ":\n";
+            cin >>listaClientes[i].id_llamada[x];
+
+            int categoria_opcion;
+            cout <<"¿Cual es la categoría de la llamada?\n";
+            cout <<"1. Local\n2. Larga distancia\n3. Celular\n";
+            cin >>categoria_opcion;
+
+            switch(categoria_opcion) 
+            {
+                case 1: listaClientes[i].categoria[x] = "local"; break;
+                case 2: listaClientes[i].categoria[x] = "larga"; break;
+                case 3: listaClientes[i].categoria[x] = "celular"; break;
+                default: listaClientes[i].categoria[x] = "desconocida";
+            }
+
+            cout <<"¿Cuantos minutos duro la llamada?\n";
+            cin >>listaClientes[i].duracion[x];
+
+            // Calculo del valor de la llamada dependiendo del tipo
+            switch(categoria_opcion) {
+                case 1: listaClientes[i].valor[x] = listaClientes[i].duracion[x] * 35; break;
+                case 2: listaClientes[i].valor[x] = listaClientes[i].duracion[x] * 380; break;
+                case 3: listaClientes[i].valor[x] = listaClientes[i].duracion[x] * 999; break;
+                default: listaClientes[i].valor[x] = 0;
+            }
+        }
+    }
+
+    // Menu general  
+    do {
+        cout <<"Menu\n";
+        cout <<"1. Ver informacion detallada de un cliente\n";
+        cout <<"2. Ver resumen general del sistema\n";
+        cout <<"3. Reiniciar sistema\n";
+        cout <<"0. Salir\n";
+        cout <<"Seleccione una opcion:\n";
+        cin >>opcion;
+
+        switch(opcion) 
+        {
+            case 1: 
+            {
+            //mostrar cantidad de llamadas duracion y costo, tambien el tipo
+            int posCliente;
+            cout<<"Ingrese el numero del cliente (de 0 a "<< tam - 1 << ")\n";
+            cin>>posCliente;
+        if(posCliente >= 0 && posCliente < tam) 
+        {
+        cout<<"Informacion del cliente:"<< listaClientes[posCliente].nombre << "\n";
+
+        int llamadas_local = 0, llamadas_larga = 0, llamadas_celular = 0;
+        float total_local = 0, total_larga = 0, total_celular = 0;
+        float tiempo_local = 0, tiempo_larga = 0, tiempo_celular = 0;
+
+        for(x = 0; x < listaClientes[posCliente].cantidad_llamadas; x++) 
+        {
+        string _categoria = listaClientes[posCliente].categoria[x];
+        float _duracion = listaClientes[posCliente].duracion[x];
+        float _valor = listaClientes[posCliente].valor[x];
+
+        if(_categoria == "local") 
+        {
+        llamadas_local++;
+        tiempo_local += _duracion;
+        total_local += _valor;
+        }else if (_categoria =="larga") 
+        {
+        llamadas_larga++;
+        tiempo_larga += _duracion;
+        total_larga += _valor;
+        }else if (_categoria =="celular") 
+        {
+        llamadas_celular++;
+        tiempo_celular += _duracion;
+        total_celular += _valor;
+        }
+        }
+
+        cout<<"Detalle por categoria\n";
+        cout<<"Locales:"<< llamadas_local <<"llamadas,"<< tiempo_local <<"minutos,$"<< total_local << endl;
+        cout<<"Larga distancia:"<< llamadas_larga <<"llamadas,"<< tiempo_larga <<"minutos,$"<< total_larga << endl;
+        cout<<"Celulares:"<< llamadas_celular <<"llamadas,"<< tiempo_celular <<"minutos,$"<< total_celular << endl;
+        }else 
+        {
+        cout<<"Numero de cliente invalido.\n";
+        }
+        break;
+            }
+
+        case 2: 
+        { //caso 2 del menu, informacion de todas las llamadas del cliente
+        int total_llamadas = 0;
+        float total_duracion = 0;
+        float total_valor = 0;
+
+        cout <<"Resumen general del sistema\n";
+        for(i = 0; i < tam; i++) 
+        {
+        for(x = 0; x < listaClientes[i].cantidad_llamadas; x++) 
+        {
+        total_llamadas++;
+        total_duracion += listaClientes[i].duracion[x];
+        total_valor += listaClientes[i].valor[x];
+        }
+            }
+
+            cout <<"Total de llamadas registradas: "<< total_llamadas << endl;
+            cout <<"Duracion total de llamadas: "<< total_duracion <<"minutos\n";
+            cout <<"Costo total del sistema: $"<< total_valor << endl;
+            break;
+        }
+
+            case 3: 
+            {
+            // Reinicio del sistema,se eliminan los datos de llamadas
+            for(i = 0; i < tam; i++) 
+            {
+                listaClientes[i].cantidad_llamadas = 0;
+            }
+            cout <<"Se borraron todos los datos de las llamadas\n";
+            break;
+            }
+
+            case 0:
+                cout <<"gracias por comunicarte con nosotros, adios\n";
+                break;
+
+            default:
+                cout <<"Error Intente nuevamente\n";
+        }
+
+    } while(opcion != 0);
+
+    return 0;
+}
