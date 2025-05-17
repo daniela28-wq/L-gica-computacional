@@ -6,3 +6,4 @@
 - **Rama `entrega5 - 26/04/2025`**: Contiene el material de la quinta entrega.
 - **Rama `entrega6 - 03/05/2025`**: Contiene el material de la sexta entrega.
 - **Rama `entrega7 - 10/05/2025`**: Contiene el material de la séptima entrega.
+- **Rama `entrega8 - 17/05/2025`**: Contiene el material de la octava entrega.
